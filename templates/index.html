@@ -6,6 +6,7 @@
   <title>Virtual Prism Atelier</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@600&display=swap" rel="stylesheet" />
   <style>
+    /* Reset */
     * {
       margin: 0;
       padding: 0;
@@ -16,6 +17,7 @@
       font-family: 'Roboto', sans-serif;
       background-color: #fffaf5; /* Light warm background */
       color: #4a1c1c; /* Deep red-brown for text */
+      overflow-x: hidden;
     }
 
     a {
@@ -23,9 +25,35 @@
       color: inherit;
     }
 
+    /* Keyframes for animations */
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes gradientShift {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
     /* Header / Hero */
     header {
-      background: linear-gradient(135deg, #e60026, #ffb700); /* Bright red to gold */
+      background: linear-gradient(270deg, #e60026, #ffb700, #e60026);
+      background-size: 600% 600%;
+      animation: gradientShift 20s ease infinite;
       color: white;
       text-align: center;
       padding: 80px 20px 60px;
@@ -40,18 +68,24 @@
     .logo {
       width: 160px;
       margin-bottom: 20px;
+      filter: drop-shadow(0 0 4px rgba(0,0,0,0.15));
     }
 
     header h1 {
       font-family: 'Poppins', sans-serif;
       font-size: 3rem;
       color: #fff;
+      animation: fadeInUp 1s ease forwards;
+      opacity: 0;
     }
 
     .tagline {
       font-size: 1.4rem;
       margin: 15px 0 30px;
       color: #fff8e1; /* soft gold */
+      animation: fadeInUp 1.5s ease forwards;
+      animation-delay: 0.4s;
+      opacity: 0;
     }
 
     .hero-nav {
@@ -70,11 +104,33 @@
       border-radius: 30px;
       transition: all 0.3s ease;
       border: none;
+      box-shadow: 0 3px 8px rgba(255, 215, 0, 0.5);
+      font-size: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-nav a::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: -100%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: left 0.4s ease;
+      border-radius: 30px;
+    }
+
+    .hero-nav a:hover::after {
+      left: 0;
     }
 
     .hero-nav a:hover {
       background-color: #fff3b0;
       transform: scale(1.05);
+      color: #7b0000;
+      box-shadow: 0 6px 15px rgba(255, 215, 0, 0.8);
     }
 
     /* Sections */
@@ -90,6 +146,7 @@
       font-size: 2.5rem;
       margin-bottom: 40px;
       color: #c40024;
+      text-shadow: 1px 1px 5px rgba(196, 0, 36, 0.3);
     }
 
     .cards {
@@ -99,31 +156,48 @@
       gap: 20px;
     }
 
-	.card {
-	  background: #ffd700;
-	  padding: 30px;
-	  border-radius: 15px;
-	  box-shadow: 0 4px 20px rgba(255, 0, 0, 0.1);
-	  flex: 1 1 280px;
-	  max-width: 300px;
-	  text-align: center;
-	  transition: transform 0.3s, box-shadow 0.3s;
-	  border: 1.5px solid #ffcccc; /* light thin red outline */
-	}
+    .card {
+      background: #ffd700;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(255, 0, 0, 0.1);
+      flex: 1 1 280px;
+      max-width: 300px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease;
+      border: 1.5px solid #ffcccc; /* light thin red outline */
+      opacity: 0;
+      transform: translateY(20px);
+      cursor: default;
+      user-select: none;
+    }
 
+    .card.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 0.2s;
+      cursor: default;
+      user-select: auto;
+    }
 
     .card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 10px 25px rgba(255, 0, 0, 0.2);
+      transform: translateY(-15px) scale(1.05);
+      box-shadow: 0 15px 35px rgba(255, 0, 0, 0.3);
+      background: linear-gradient(135deg, #ffda00, #ffa600);
+      color: #5b0000;
+      border-color: #ff9f00;
     }
 
     .card h3 {
       color: #b8001f;
       margin-bottom: 10px;
+      font-weight: 700;
     }
 
     .card p {
       color: #5c1b1b;
+      font-size: 1rem;
+      line-height: 1.4;
     }
 
     /* Timeline */
@@ -141,12 +215,25 @@
       width: 80%;
       border-radius: 10px;
       position: relative;
-      transition: transform 0.3s;
+      transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s ease;
+      opacity: 0;
+      transform: translateX(-20px);
+      cursor: default;
+      user-select: none;
+    }
+
+    .timeline-item.visible {
+      opacity: 1;
+      transform: translateX(0);
     }
 
     .timeline-item:hover {
       transform: translateX(5px);
       background: #ffeecc;
+      box-shadow: 0 5px 15px rgba(255, 183, 0, 0.3);
+      border-color: #ffb700;
+      cursor: pointer;
+      user-select: auto;
     }
 
     .timeline-item::before {
@@ -158,14 +245,25 @@
       height: 20px;
       background: #ffd700;
       border-radius: 50%;
+      box-shadow: 0 0 6px rgba(255, 215, 0, 0.7);
+      transition: background 0.3s ease;
+    }
+
+    .timeline-item:hover::before {
+      background: #ffb700;
+      box-shadow: 0 0 12px rgba(255, 183, 0, 1);
     }
 
     .timeline-item h3 {
       color: #c40024;
+      margin-bottom: 8px;
+      font-weight: 700;
     }
 
     .timeline-item p {
       color: #333;
+      font-size: 1rem;
+      line-height: 1.4;
     }
 
     /* Footer */
@@ -174,6 +272,9 @@
       color: white;
       text-align: center;
       padding: 40px 20px;
+      font-size: 1rem;
+      font-weight: 500;
+      box-shadow: inset 0 8px 12px -10px rgba(0,0,0,0.4);
     }
 
     footer p {
@@ -190,6 +291,13 @@
       }
       .hero-nav a {
         width: 100%;
+      }
+      .cards {
+        flex-direction: column;
+        align-items: center;
+      }
+      .timeline-item {
+        width: 95%;
       }
     }
   </style>
@@ -285,5 +393,37 @@
     <p>&copy; 2025 Virtual Prism Atelier. All rights reserved.</p>
   </footer>
 
+  <script>
+    // Animate cards and timeline items on scroll
+    function onScrollAnimate() {
+      const cards = document.querySelectorAll('.card');
+      const timelineItems = document.querySelectorAll('.timeline-item');
+      const windowBottom = window.innerHeight;
+
+      cards.forEach(card => {
+        const cardTop = card.getBoundingClientRect().top;
+        if (cardTop < windowBottom - 100) {
+          card.classList.add('visible');
+        }
+      });
+
+      timelineItems.forEach(item => {
+        const itemTop = item.getBoundingClientRect().top;
+        if (itemTop < windowBottom - 100) {
+          item.classList.add('visible');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', onScrollAnimate);
+    window.addEventListener('load', () => {
+      // Trigger on load for items already in viewport
+      onScrollAnimate();
+
+      // Animate hero heading & tagline opacity from CSS (fallback)
+      document.querySelector('header h1').style.opacity = 1;
+      document.querySelector('.tagline').style.opacity = 1;
+    });
+  </script>
 </body>
 </html>
